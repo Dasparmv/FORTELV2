@@ -595,7 +595,13 @@ label{ font-size:.9rem; color: var(--muted); display:block; margin-bottom: 8px; 
   padding: 24px;
   position:relative;
   overflow:hidden;
+
+  /* IMPORTANT: crea un contexto de apilado para que el contenido
+     quede siempre por encima del fondo */
+  isolation: isolate;
 }
+
+/* FIX: los blobs ya no capturan clicks/teclado y quedan debajo */
 .blob{
   position:absolute;
   width: 420px;
@@ -604,7 +610,11 @@ label{ font-size:.9rem; color: var(--muted); display:block; margin-bottom: 8px; 
   filter: blur(40px);
   opacity: .55;
   animation: float 10s ease-in-out infinite;
+
+  pointer-events: none;  /* <-- CLAVE */
+  z-index: 0;            /* <-- CLAVE */
 }
+
 .blob.b1{
   left: -120px;
   top: -120px;
@@ -632,10 +642,15 @@ label{ font-size:.9rem; color: var(--muted); display:block; margin-bottom: 8px; 
   display:grid;
   grid-template-columns: 1.05fr .95fr;
   gap: 14px;
+
+  /* FIX: por encima del fondo SIEMPRE */
+  position: relative;
+  z-index: 2;
 }
 @media (max-width: 980px){
   .login-card{ grid-template-columns: 1fr; }
 }
+
 .hero{
   padding: 22px;
   border-radius: 22px;
@@ -673,6 +688,9 @@ label{ font-size:.9rem; color: var(--muted); display:block; margin-bottom: 8px; 
   background: rgba(16,26,51,.78);
   backdrop-filter: blur(14px);
   box-shadow: var(--shadow);
+
+  position: relative;
+  z-index: 2; /* extra seguro */
 }
 [data-theme="light"] .auth{ background: rgba(255,255,255,.78); }
 .auth h2{ margin:0; font-size: 1.25rem; }
@@ -713,6 +731,7 @@ label{ font-size:.9rem; color: var(--muted); display:block; margin-bottom: 8px; 
   border:1px solid rgba(124,58,237,.45);
   opacity:.0;
   animation: ring 2.2s ease infinite;
+  pointer-events:none; /* también */
 }
 @keyframes ring{
   0%{ opacity:0; transform: scale(.98); }
